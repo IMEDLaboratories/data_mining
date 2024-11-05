@@ -1,0 +1,21 @@
+BAZA PRZYCHODNI
+
+Wyniki dla zapytania:
+SELECT * FROM appointments LIMIT 5;
+Czas wykonania: 0.0567 s
+똱ednie zu퓓cie RAM: 18.9557 MB, Maksymalne zu퓓cie RAM: 19.4023 MB
+똱ednia wydajno쒏 CPU: 4.2333%, Maksymalna wydajno쒏 CPU: 8.3000%
+
+Wyniki dla zapytania:
+SELECT d.first_name, d.last_name, COUNT(a.appointment_id) AS total_appointments FROM doctors d JOIN appointments a ON d.doctor_id = a.doctor_id GROUP BY d.first_name, d.last_name;
+Czas wykonania: 4.2434 s
+똱ednie zu퓓cie RAM: 28.0469 MB, Maksymalne zu퓓cie RAM: 42.2539 MB
+똱ednia wydajno쒏 CPU: 5.6667%, Maksymalna wydajno쒏 CPU: 11.4000%
+
+Wyniki dla zapytania:
+SELECT first_name, last_name FROM patients WHERE patient_id IN (SELECT patient_id FROM appointments WHERE diagnosis = 'Depression');
+Czas wykonania: 0.6908 s
+똱ednie zu퓓cie RAM: 31.0794 MB, Maksymalne zu퓓cie RAM: 47.7734 MB
+똱ednia wydajno쒏 CPU: 3.3000%, Maksymalna wydajno쒏 CPU: 5.5000%
+
+==========
