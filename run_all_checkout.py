@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import subprocess
 import os
+import sys
+
 import pandas as pd
 import re
 
@@ -10,6 +12,7 @@ scripts = [
     "flight_database_checkout.py",
     "trip_database_checkout.py"
 ]
+
 
 def run_script(script_name):
     print(f"Rozpoczynam wykonywanie skryptu: {script_name}...")
@@ -62,13 +65,20 @@ def parse_results(file_path):
 
     return parsed_data
 
+
 def save_to_excel(data, output_file):
     """Save parsed data to an Excel file."""
     df = pd.DataFrame(data)
     df.to_excel(output_file, index=False)
     print(f"Wyniki zapisano do pliku {output_file}")
 
+
 def main():
+    # Check if result.txt exist
+    if os.path.exists("result.txt"):
+        print("Plik 'result.txt' już istnieje. Usuń go przed rozpoczęciem programu.")
+        sys.exit(1)  # Zakończ program z kodem wyjścia 1
+
     # Run each script
     for script in scripts:
         run_script(script)
@@ -78,6 +88,7 @@ def main():
 
     # Save parsed data to Excel
     save_to_excel(parsed_data, "database_performance_comparison.xlsx")
+
 
 if __name__ == "__main__":
     main()
