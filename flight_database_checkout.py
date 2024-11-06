@@ -85,10 +85,10 @@ queries = [
 ]
 
 def main():
-    with open("result.txt", "w") as f:
+    with open("result.txt", "a") as f:
         f.write("BAZA LOTOW\n\n")
 
-    print("Start testów dla bazy danych 'przychodnia'...\n")
+    print("Start testów dla bazy danych 'flight'...\n")
     for query in queries:
         measure_query_performance(query)
 

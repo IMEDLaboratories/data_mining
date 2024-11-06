@@ -85,7 +85,7 @@ queries = [
 ]
 
 def main():
-    with open("result.txt", "w") as f:
+    with open("result.txt", "a") as f:
         f.write("BAZA PRZYCHODNI\n\n")
 
     print("Start testów dla bazy danych 'przychodnia'...\n")
