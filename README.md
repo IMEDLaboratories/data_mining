@@ -19,11 +19,13 @@ Each script measures the execution time, CPU, and memory usage for a series of q
 - **PostgreSQL** (configured in `pgAdmin`)
 - **psycopg2** (Python library for PostgreSQL connectivity)
 - **psutil** (for tracking system resource usage)
+- **openpyxl** (for excel save)
 
 Install dependencies by running:
 
 ```bash
 pip install psycopg2 psutil
+pip install openpyxl
 
 
 #USAGE
