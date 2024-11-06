@@ -33,22 +33,22 @@ def parse_results(file_path):
         for line in file:
             line = line.strip()
 
-            if line.startswith("BAZA"):
-                current_database = line.replace("BAZA ", "")
+            if line.startswith("DATABASE"):
+                current_database = line.replace("DATABASE ", "")
 
-            elif line.startswith("Wyniki dla zapytania:"):
+            elif line.startswith("Results for query:"):
                 # Odczytanie zapytania z następnej linii
                 current_query = next(file).strip()
 
-            elif "Czas wykonania" in line:
+            elif "Completion time:" in line:
                 # Wyodrębnienie czasu wykonania
-                execution_time = float(re.search(r"Czas wykonania: ([\d.]+)", line).group(1))
+                execution_time = float(re.search(r"Completion time: ([\d.]+)", line).group(1))
 
-            elif "Średnie zużycie RAM" in line:
+            elif "Average RAM usage" in line:
                 # Wyodrębnienie średniego i maksymalnego RAM-u
                 avg_ram, max_ram = map(float, re.findall(r"[\d.]+", line))
 
-            elif "Średnia wydajność CPU" in line:
+            elif "Average CPU performance" in line:
                 # Wyodrębnienie średniego i maksymalnego CPU
                 avg_cpu, max_cpu = map(float, re.findall(r"[\d.]+", line))
 
