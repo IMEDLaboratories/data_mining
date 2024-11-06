@@ -64,10 +64,10 @@ def measure_query_performance(query):
 
     # Przygotowanie wyników do wypisania
     results = (
-        f"Wyniki dla zapytania:\n{query}\n"
-        f"Czas wykonania: {execution_time:.4f} s\n"
-        f"Średnie zużycie RAM: {avg_ram:.4f} MB, Maksymalne zużycie RAM: {max_ram:.4f} MB\n"
-        f"Średnia wydajność CPU: {avg_cpu:.4f}%, Maksymalna wydajność CPU: {max_cpu:.4f}%\n"
+        f"Results for query:\n{query}\n"
+        f"Completion time: {execution_time:.4f} s\n"
+        f"Average RAM usage: {avg_ram:.4f} MB, Maximum RAM usage: {max_ram:.4f} MB\n"
+        f"Average CPU performance: {avg_cpu:.4f}%, Maximum CPU performance: {max_cpu:.4f}%\n"
     )
 
     # Wyświetlenie wyników na konsoli
@@ -86,9 +86,9 @@ queries = [
 
 def main():
     with open("result.txt", "a") as f:
-        f.write("BAZA LOTOW\n\n")
+        f.write("DATABASE FLIGHT\n\n")
 
-    print("Start testów dla bazy danych 'flight'...\n")
+    print("Start of tests for the 'flight' database...\n")
     for query in queries:
         measure_query_performance(query)
 
