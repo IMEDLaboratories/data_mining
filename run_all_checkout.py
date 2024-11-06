@@ -15,12 +15,12 @@ scripts = [
 
 
 def run_script(script_name):
-    print(f"Rozpoczynam wykonywanie skryptu: {script_name}...")
+    print(f"I am starting the script execution: {script_name}...")
     result = subprocess.run(["python", script_name], capture_output=True, text=True)
     if result.returncode == 0:
-        print(f"Skrypt {script_name} zakończył się pomyślnie.\n")
+        print(f"Script {script_name} completed successfully\n")
     else:
-        print(f"Wystąpił błąd podczas wykonywania skryptu {script_name}.\n")
+        print(f"An error occurred while executing the script {script_name}.\n")
         print(result.stderr)
 
 
@@ -70,14 +70,14 @@ def save_to_excel(data, output_file):
     """Save parsed data to an Excel file."""
     df = pd.DataFrame(data)
     df.to_excel(output_file, index=False)
-    print(f"Wyniki zapisano do pliku {output_file}")
+    print(f"Results saved to file {output_file}")
 
 
 def main():
     # Check if result.txt exist
     if os.path.exists("result.txt"):
-        print("Plik 'result.txt' już istnieje. Usuń go przed rozpoczęciem programu.")
-        sys.exit(1)  # Zakończ program z kodem wyjścia 1
+        print("File 'result.txt' already exists. Delete it before starting the program")
+        sys.exit(1)
 
     # Run each script
     for script in scripts:
