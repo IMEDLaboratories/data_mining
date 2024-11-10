@@ -10,7 +10,7 @@ load_dotenv()
 
 # Ustawienia połączenia z bazą danych
 DATABASE_CONFIG = {
-    'dbname': 'trip',
+    'dbname': 'trip_database',
     'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD'),
     'host': os.getenv('DB_HOST'),
