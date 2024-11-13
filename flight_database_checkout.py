@@ -79,9 +79,19 @@ def measure_query_performance(query):
 
 # Przykładowe zapytania
 queries = [
-    "SELECT * FROM flights LIMIT 5;",  # Zwykłe zapytanie 1
-    "SELECT a.airline, COUNT(f.flight_number) AS total_flights FROM flights f JOIN airlines a ON f.airline = a.iata_code GROUP BY a.airline ORDER BY total_flights DESC;",  # Zwykłe zapytanie 2
-    "SELECT ap.airport, COUNT(f.flight_number) AS total_departures FROM airports ap JOIN flights f ON ap.iata_code = f.origin_airport GROUP BY ap.airport HAVING COUNT(f.flight_number) > 10;",  # Zwykłe zapytanie 3
+    "SELECT * FROM airports LIMIT 12;",
+    "SELECT * FROM airlines LIMIT 12;",
+    "SELECT departure_delay FROM flights LIMIT 12;",
+    "SELECT airport, city, state FROM airports WHERE country = 'United States' LIMIT 10;",
+    "SELECT day_of_week, AVG(arrival_delay) AS avg_arrival_delay FROM flights GROUP BY day_of_week ORDER BY day_of_week LIMIT 10;",
+    "SELECT airline, COUNT(*) AS total_flights FROM flights GROUP BY airline ORDER BY total_flights DESC LIMIT 10;",
+    "SELECT destination_airport, AVG(arrival_delay) AS avg_arrival_delay FROM flights GROUP BY destination_airport ORDER BY avg_arrival_delay DESC LIMIT 10;",
+    "SELECT f.flight_number, f.destination_airport, f.destination_airport, c.cancellation_description FROM flights f JOIN cancellation_codes c ON f.cancellation_reason = c.cancellation_reason WHERE f.cancelled = 1 LIMIT 10;",
+    "SELECT f.flight_number, a.city, a.state FROM flights f JOIN airports a ON f.destination_airport = a.iata_code LIMIT 10;",
+    "SELECT cancellation_codes.cancellation_reason,flights.flight_number FROM cancellation_codes JOIN flights ON cancellation_codes.cancellation_reason=cancellation_codes.cancellation_reason LIMIT 10;",
+    "SELECT f.flight_number, f.destination_airport, f.destination_airport, f.cancellation_reason FROM flights f WHERE f.cancellation_reason = ( SELECT cancellation_reason FROM flights WHERE cancellation_reason IS NOT NULL GROUP BY cancellation_reason ORDER BY COUNT(*) DESC LIMIT 1)LIMIT 10;",
+    "SELECT flight_number, destination_airport, destination_airport, arrival_delay FROM flights WHERE destination_airport IN (SELECT destination_airport FROM flights GROUP BY destination_airport HAVING AVG(arrival_delay) > 30) LIMIT 10;",
+    "SELECT flight_number, destination_airport, destination_airport, airline FROM flights WHERE airline = (SELECT airline FROM flights GROUP BY airline ORDER BY COUNT(*) DESC LIMIT 1) LIMIT 10;",
 ]
 
 def main():
