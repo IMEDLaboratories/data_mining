@@ -10,9 +10,11 @@ import re
 scripts = [
     "appointments_database_checkout.py",
     "flight_database_checkout.py",
-    "trip_database_checkout.py"
+    "trip_database_checkout.py",
+    "appointments_MongoDB_checkout.py",
+    "flight_MongoDB_checkout.py",
+    "trip_MongoDB_checkout.py"
 ]
-
 
 def run_script(script_name):
     print(f"I am starting the script execution: {script_name}...")
@@ -23,11 +25,13 @@ def run_script(script_name):
         print(f"An error occurred while executing the script {script_name}.\n")
         print(result.stderr)
 
-
 def parse_results(file_path):
     parsed_data = []
     current_database = ""
     current_query = ""
+    query_number = 1  # Start query numbering from 1 for PostgreSQL
+    mongo_query_number = 1  # Start query numbering from 1 for each MongoDB database
+    mongo_databases = ['appointments_MongoDB_checkout.py', 'flight_MongoDB_checkout.py', 'trips_MongoDB_checkout.py']
 
     with open(file_path, "r") as file:
         for line in file:
@@ -35,10 +39,17 @@ def parse_results(file_path):
 
             if line.startswith("DATABASE"):
                 current_database = line.replace("DATABASE ", "")
+                # Reset query number for each MongoDB database
+                if current_database in ["CLINIC (MongoDB)", "TRIP (MongoDB)", "FLIGHT (MongoDB)"]:
+                    query_number = mongo_query_number  # Reset query number for each MongoDB database
 
             elif line.startswith("Results for query:"):
-                # Odczytanie zapytania z następnej linii
-                current_query = next(file).strip()
+                # Start of a new query, update the query number
+                current_query = query_number
+                query_number += 1
+                if current_database in ["CLINIC (MongoDB)", "TRIP (MongoDB)", "FLIGHT (MongoDB)"]:
+                    query_number = mongo_query_number
+                    mongo_query_number += 1
 
             elif "Completion time:" in line:
                 # Wyodrębnienie czasu wykonania
@@ -65,16 +76,14 @@ def parse_results(file_path):
 
     return parsed_data
 
-
 def save_to_excel(data, output_file):
     """Save parsed data to an Excel file."""
     df = pd.DataFrame(data)
     df.to_excel(output_file, index=False)
     print(f"Results saved to file {output_file}")
 
-
 def main():
-    # Check if result.txt exist
+    # Check if result.txt exists
     if os.path.exists("result.txt"):
         print("File 'result.txt' already exists. Delete it before starting the program")
         sys.exit(1)
