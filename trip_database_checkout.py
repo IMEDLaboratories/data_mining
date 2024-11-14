@@ -10,7 +10,7 @@ load_dotenv()
 
 # Ustawienia połączenia z bazą danych
 DATABASE_CONFIG = {
-    'dbname': 'trip_database',
+    'dbname': 'trip',
     'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD'),
     'host': os.getenv('DB_HOST'),
@@ -79,9 +79,18 @@ def measure_query_performance(query):
 
 # Przykładowe zapytania
 queries = [
-    "SELECT * FROM Trips LIMIT 5;",  # Zwykłe zapytanie 1
-    "SELECT s.station_name, COUNT(t.trip_id) AS total_trips FROM Trips t JOIN Stations s ON t.start_station_id = s.station_id GROUP BY s.station_name ORDER BY total_trips DESC;",  # Zwykłe zapytanie 2
-    "SELECT u.birth_year, u.gender, COUNT(t.trip_id) AS total_trips FROM Users u JOIN Trips t ON u.user_id = t.user_id GROUP BY u.birth_year, u.gender HAVING COUNT(t.trip_id) > 5;",  # Zwykłe zapytanie 3
+    "SELECT * FROM users LIMIT 10;",
+    "SELECT station_name, latitude, longitude FROM stations LIMIT 10;",
+    "SELECT * FROM trips WHERE tripduration > 1800 LIMIT 10;",
+    "SELECT gender, COUNT(*) AS trip_count FROM trips t JOIN users u ON t.user_id = u.user_id GROUP BY gender LIMIT 10;",
+    "SELECT user_id, AVG(tripduration) AS average_tripduration FROM trips GROUP BY user_id LIMIT 10;",
+    "SELECT start_station_id, COUNT(*) AS trips_started FROM trips GROUP BY start_station_id LIMIT 10;",
+    "SELECT * FROM trips WHERE start_station_id = (SELECT start_station_id FROM trips GROUP BY start_station_id ORDER BY COUNT(*) DESC LIMIT 1) LIMIT 10;",
+    "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM trips WHERE start_station_id = (SELECT station_id FROM stations ORDER BY SQRT(POW(latitude, 2) + POW(longitude, 2)) DESC LIMIT 1)) LIMIT 10;",
+    "SELECT * FROM trips WHERE tripduration > (SELECT AVG(tripduration) FROM trips) LIMIT 10;",
+    "SELECT u.user_id, u.birth_year, u.gender, s.station_name AS start_station FROM trips t JOIN users u ON t.user_id = u.user_id JOIN stations s ON t.start_station_id = s.station_id LIMIT 10;",
+    "SELECT t.trip_id, s1.station_name AS start_station, s2.station_name AS end_station FROM trips t JOIN stations s1 ON t.start_station_id = s1.station_id JOIN stations s2 ON t.end_station_id = s2.station_id LIMIT 10",
+    "SELECT t.trip_id, t.tripduration, 2024 - u.birth_year AS user_age FROM trips t JOIN users u ON t.user_id = u.user_id LIMIT 10;",
 ]
 
 def main():
