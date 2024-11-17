@@ -25,7 +25,6 @@ def connect_to_mongodb():
     finally:
         client.close()
 
-
 def measure_query_performance(query):
     """Wykonuje zapytanie MongoDB i mierzy czas wykonania, użycie RAM i CPU."""
 
@@ -113,19 +112,19 @@ queries = [
     {
         'name': 'Average arrival delay by day of week',
         'collection': 'flights',
-        'pipeline': [
+        'optimized_pipeline': [
             {'$group': {
                 '_id': '$day_of_week',
                 'avg_arrival_delay': {'$avg': '$arrival_delay'}
             }},
             {'$sort': {'_id': 1}},
             {'$limit': 10}
-        ]
+        ],
     },
     {
         'name': 'Flights count by airline',
         'collection': 'flights',
-        'pipeline': [
+        'optimized_pipeline': [
             {'$group': {
                 '_id': '$airline',
                 'total_flights': {'$sum': 1}
@@ -137,7 +136,7 @@ queries = [
     {
         'name': 'Average arrival delay by destination',
         'collection': 'flights',
-        'pipeline': [
+        'optimized_pipeline': [
             {'$group': {
                 '_id': '$destination_airport',
                 'avg_arrival_delay': {'$avg': '$arrival_delay'}
@@ -149,7 +148,7 @@ queries = [
     {
         'name': 'Cancelled flights with reasons',
         'collection': 'flights',
-        'pipeline': [
+        'optimized_pipeline': [
             {'$match': {'cancelled': 1}},
             {'$lookup': {
                 'from': 'cancellation_codes',
@@ -237,7 +236,7 @@ queries = [
     {
         'name': 'Flights to high-delay airports',
         'collection': 'flights',
-        'pipeline': [
+        'optimized_pipeline': [
             {'$group': {
                 '_id': '$destination_airport',
                 'avg_delay': {'$avg': '$arrival_delay'}
@@ -262,12 +261,12 @@ queries = [
             {'$unwind': '$flights'},
             {'$replaceRoot': {'newRoot': '$flights'}},
             {'$limit': 10}
-        ]
+        ],
     },
     {
         'name': 'Flights from airline with most flights',
         'collection': 'flights',
-        'pipeline': [
+        'optimized_pipeline': [
             {'$group': {
                 '_id': '$airline',
                 'count': {'$sum': 1}
@@ -292,7 +291,7 @@ queries = [
             }},
             {'$unwind': '$flights'},
             {'$replaceRoot': {'newRoot': '$flights'}}
-        ]
+        ],
     }
 ]
 

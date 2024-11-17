@@ -25,13 +25,13 @@ def run_script(script_name):
         print(f"An error occurred while executing the script {script_name}.\n")
         print(result.stderr)
 
+
 def parse_results(file_path):
     parsed_data = []
     current_database = ""
-    current_query = ""
-    query_number = 1  # Start query numbering from 1 for PostgreSQL
-    mongo_query_number = 1  # Start query numbering from 1 for each MongoDB database
-    mongo_databases = ['appointments_MongoDB_checkout.py', 'flight_MongoDB_checkout.py', 'trips_MongoDB_checkout.py']
+    current_query = 1  # Start from 1 and continue sequentially across all databases
+    mongo_query_start = 1  # Starting point for MongoDB numbering
+    in_mongo_section = False  # Tracks if we're in the MongoDB section
 
     with open(file_path, "r") as file:
         for line in file:
@@ -39,34 +39,29 @@ def parse_results(file_path):
 
             if line.startswith("DATABASE"):
                 current_database = line.replace("DATABASE ", "")
-                # Reset query number for each MongoDB database
-                if current_database in ["CLINIC (MongoDB)", "TRIP (MongoDB)", "FLIGHT (MongoDB)"]:
-                    query_number = mongo_query_number  # Reset query number for each MongoDB database
+
+                # Detect if we're in MongoDB databases section, reset numbering only for MongoDB
+                if "MongoDB" in current_database:
+                    if not in_mongo_section:  # Reset only when switching to MongoDB
+                        current_query = mongo_query_start
+                        in_mongo_section = True
+                else:
+                    in_mongo_section = False  # For PostgreSQL databases
 
             elif line.startswith("Results for query:"):
-                # Start of a new query, update the query number
-                current_query = query_number
-                query_number += 1
-                if current_database in ["CLINIC (MongoDB)", "TRIP (MongoDB)", "FLIGHT (MongoDB)"]:
-                    query_number = mongo_query_number
-                    mongo_query_number += 1
+                # Record the query number for each query
+                parsed_data.append({"Baza danych": current_database, "Zapytanie": current_query})
+                current_query += 1
 
             elif "Completion time:" in line:
-                # Wyodrębnienie czasu wykonania
                 execution_time = float(re.search(r"Completion time: ([\d.]+)", line).group(1))
 
             elif "Average RAM usage" in line:
-                # Wyodrębnienie średniego i maksymalnego RAM-u
                 avg_ram, max_ram = map(float, re.findall(r"[\d.]+", line))
 
             elif "Average CPU performance" in line:
-                # Wyodrębnienie średniego i maksymalnego CPU
                 avg_cpu, max_cpu = map(float, re.findall(r"[\d.]+", line))
-
-                # Zapis danych z bieżącego zapytania
-                parsed_data.append({
-                    "Baza danych": current_database,
-                    "Zapytanie": current_query,
+                parsed_data[-1].update({
                     "Czas wykonania (s)": execution_time,
                     "Średnie zużycie RAM (MB)": avg_ram,
                     "Maksymalne zużycie RAM (MB)": max_ram,
